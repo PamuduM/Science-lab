@@ -5,16 +5,16 @@ import { Card } from "antd";
 import backgroundImage from "../assets/back.jpg"; // Adjust path if necessary
 import Footer from "../components/Footer";
 
-const Tutorials = () => {
+const Lessons = () => {
   const navigate = useNavigate();
 
   const grades = [
-    { grade: 6, path: "/tutorials/grade6" },
-    { grade: 7, path: "/tutorials/grade7" },
-    { grade: 8, path: "/tutorials/grade8" },
-    { grade: 9, path: "/tutorials/grade9" },
-    { grade: 10, path: "/tutorials/grade10" },
-    { grade: 11, path: "/tutorials/grade11" },
+    { grade: 6, path: "/lessons/grade6" },
+    { grade: 7, path: "/lessons/grade7" },
+    { grade: 8, path: "/lessons/grade8" },
+    { grade: 9, path: "/lessons/grade9" },
+    { grade: 10, path: "/lessons/grade10" },
+    { grade: 11, path: "/lessons/grade11" },
   ];
 
   const pageStyle = {
@@ -79,8 +79,8 @@ const Tutorials = () => {
       <div style={overlayStyle}></div>
       
       <div style={contentStyle}>
-        <h1>Science Tutorials</h1>
-        <p>Select your grade to access the tutorials.</p>
+        <h1>Science Lessons</h1>
+        <p>Select your grade to access the lessons.</p>
 
         <div style={cardContainerStyle}>
           {grades.map(({ grade, path }) => (
@@ -92,7 +92,7 @@ const Tutorials = () => {
               onClick={() => navigate(path)}
               hoverable
             >
-              Click to view Grade {grade} tutorials
+              Click to view Grade {grade} lessons
             </Card>
           ))}
         </div>
@@ -105,4 +105,4 @@ const Tutorials = () => {
   );
 };
 
-export default Tutorials;
+export default Lessons;
