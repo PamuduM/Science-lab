@@ -3,9 +3,11 @@ import { Modal, Form, Input, Button, notification } from "antd";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const LoginPopup = ({ isVisible, onClose, onSignupClick }) => {
+const LoginPopup = ({ isVisible, onClose, onSignupClick, onLoginSuccess }) => {
   const [form] = Form.useForm();
-@@ -11,27 +11,23 @@ const LoginPopup = ({ isVisible, onClose, onSignupClick }) => {
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
   const handleLogin = async (values) => {
     setLoading(true);
     try {
@@ -15,10 +17,12 @@ const LoginPopup = ({ isVisible, onClose, onSignupClick }) => {
       );
       const { token, user } = response.data;
 
-
+      // Update localStorage
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
 
+      // Call the callback to update NavBar state
+      onLoginSuccess(user, token);
 
       notification.success({
         message: `Welcome back, ${user.fullName}!`,
@@ -27,15 +31,16 @@ const LoginPopup = ({ isVisible, onClose, onSignupClick }) => {
       if (user.role === "teacher") navigate("/admin");
       else if (user.role === "student") navigate("/home2");
 
-
-
-
-
       onClose();
     } catch (error) {
       notification.error({
         message: "Login failed",
-@@ -44,49 +40,114 @@ const LoginPopup = ({ isVisible, onClose, onSignupClick }) => {
+        description: error.response?.data?.message || error.message,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <Modal
@@ -53,7 +58,6 @@ const LoginPopup = ({ isVisible, onClose, onSignupClick }) => {
       </h2>
 
       <Form form={form} layout="vertical" onFinish={handleLogin}>
-
         <Form.Item
           name="email"
           label="Email"
