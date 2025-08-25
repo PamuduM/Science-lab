@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Modal, Form, Input, Button, notification } from "antd";
 import { MailOutlined, LockOutlined } from "@ant-design/icons";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { login } from "../api/auth";
 
 const LoginPopup = ({ isVisible, onClose, onSignupClick, onLoginSuccess }) => {
   const [form] = Form.useForm();
@@ -12,23 +12,27 @@ const LoginPopup = ({ isVisible, onClose, onSignupClick, onLoginSuccess }) => {
   const handleLogin = async (values) => {
     setLoading(true);
     try {
-      const response = await axios.post(
-        "https://science-lab-tuition-web.vercel.app/api/auth/login",
-        values
-      );
-      const { token, user } = response.data;
+      const { data } = await login(values);
+      const { token, user } = data;
 
+      // Save credentials in localStorage
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
+
+      // Call parent callback
       onLoginSuccess(user, token);
 
       notification.success({ message: `Welcome back, ${user.fullName}!` });
+
+      // Navigate to role-based page
       navigate(user.role === "teacher" ? "/admin" : "/home2");
+
+      // Close modal
       onClose();
     } catch (error) {
       notification.error({
-        message: "Login failed",
-        description: error.response?.data?.message || error.message,
+        message: "Login Failed",
+        description: error.response?.data?.message || "Something went wrong.",
       });
     } finally {
       setLoading(false);
@@ -41,32 +45,20 @@ const LoginPopup = ({ isVisible, onClose, onSignupClick, onLoginSuccess }) => {
       onCancel={onClose}
       footer={null}
       centered
-      closable={false}
-      bodyStyle={{
-        padding: 0,
-        background: "transparent",
-        borderRadius: 16,
-        overflow: "hidden",
-      }}
-      style={{
-        backdropFilter: "blur(8px)",
-        backgroundColor: "rgba(0,0,0,0.2)",
-      }}
+      bodyStyle={{ padding: 0 }}
     >
       <div
         style={{
           display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          padding: 40,
-          background: "rgba(255, 255, 255, 0.9)",
-          borderRadius: 16,
-          boxShadow: "0 8px 24px rgba(0, 0, 0, 0.2)",
-          animation: "fadeIn 0.5s ease-in-out",
           flexDirection: "column",
+          alignItems: "center",
+          padding: 30,
+          background: "#fff",
+          borderRadius: 16,
+          boxShadow: "0 8px 24px rgba(0,0,0,0.2)",
         }}
       >
-        <h2 style={{ marginBottom: 24, fontWeight: 700, fontSize: 24 }}>
+        <h2 style={{ marginBottom: 24, fontWeight: 700, fontSize: 22 }}>
           Welcome Back 👋
         </h2>
 
@@ -78,17 +70,16 @@ const LoginPopup = ({ isVisible, onClose, onSignupClick, onLoginSuccess }) => {
         >
           <Form.Item
             name="email"
-            rules={[{ required: true, message: "Please enter your email" }]}
+            rules={[
+              { required: true, message: "Please enter your email" },
+              { type: "email", message: "Invalid email format" },
+            ]}
           >
             <Input
               prefix={<MailOutlined />}
               placeholder="Email"
               size="large"
-              style={{
-                borderRadius: 12,
-                backgroundColor: "#f3f4f0",
-                padding: "10px 16px",
-              }}
+              style={{ borderRadius: 12 }}
             />
           </Form.Item>
 
@@ -100,11 +91,7 @@ const LoginPopup = ({ isVisible, onClose, onSignupClick, onLoginSuccess }) => {
               prefix={<LockOutlined />}
               placeholder="Password"
               size="large"
-              style={{
-                borderRadius: 12,
-                backgroundColor: "#f3f4f0",
-                padding: "10px 16px",
-              }}
+              style={{ borderRadius: 12 }}
             />
           </Form.Item>
 
@@ -113,12 +100,7 @@ const LoginPopup = ({ isVisible, onClose, onSignupClick, onLoginSuccess }) => {
             htmlType="submit"
             loading={loading}
             size="large"
-            style={{
-              width: "100%",
-              borderRadius: 12,
-              fontWeight: "bold",
-              marginTop: 8,
-            }}
+            style={{ width: "100%", borderRadius: 12, fontWeight: "bold" }}
           >
             Login
           </Button>
