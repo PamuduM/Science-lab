@@ -15,24 +15,26 @@ const LoginPopup = ({ isVisible, onClose, onSignupClick, onLoginSuccess }) => {
       const { data } = await login(values);
       const { token, user } = data;
 
-      // Save credentials in localStorage
+      // Save user data to localStorage
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
 
-      // Call parent callback
-      onLoginSuccess(user, token);
+      // Trigger parent callback
+      onLoginSuccess?.(user, token);
 
-      notification.success({ message: `Welcome back, ${user.fullName}!` });
+      notification.success({
+        message: `Welcome back, ${user.fullName || "User"}!`,
+      });
 
-      // Navigate to role-based page
+      // Navigate based on user role
       navigate(user.role === "teacher" ? "/admin" : "/home2");
 
-      // Close modal
-      onClose();
+      // Close modal after successful login
+      onClose?.();
     } catch (error) {
       notification.error({
         message: "Login Failed",
-        description: error.response?.data?.message || "Something went wrong.",
+        description: error.response?.data?.message || "Something went wrong. Please try again.",
       });
     } finally {
       setLoading(false);
@@ -46,6 +48,7 @@ const LoginPopup = ({ isVisible, onClose, onSignupClick, onLoginSuccess }) => {
       footer={null}
       centered
       bodyStyle={{ padding: 0 }}
+      destroyOnClose
     >
       <div
         style={{
