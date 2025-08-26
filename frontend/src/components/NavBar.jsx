@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Menu, Layout, Button, Avatar, Drawer } from "antd";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -15,33 +14,28 @@ const NavBar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Check localStorage on mount
+  // Check authentication on mount
   useEffect(() => {
     const token = localStorage.getItem("token");
     const userData = localStorage.getItem("user");
     if (token && userData) {
       setIsLoggedIn(true);
       setUser(JSON.parse(userData));
-    } else {
-      setIsLoggedIn(false);
-      setUser(null);
     }
   }, []);
 
-  // Handle window resize
+  // Responsive design handling
   useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
     window.addEventListener("resize", handleResize);
-    handleResize();
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Callback to update state after successful login
+  // Login callback
   const handleLoginSuccess = (userData, token) => {
     setIsLoggedIn(true);
     setUser(userData);
@@ -49,22 +43,7 @@ const NavBar = () => {
     localStorage.setItem("user", JSON.stringify(userData));
   };
 
-  const showLoginPopup = () => {
-    setIsLoginVisible(true);
-  };
-
-  const hideLoginPopup = () => {
-    setIsLoginVisible(false);
-  };
-
-  const showSignupPopup = () => {
-    setIsSignupVisible(true);
-  };
-
-  const hideSignupPopup = () => {
-    setIsSignupVisible(false);
-  };
-
+  // Logout
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
@@ -73,6 +52,7 @@ const NavBar = () => {
     navigate("/");
   };
 
+  // Menu key based on route
   const getSelectedKey = () => {
     if (location.pathname.includes("/admin")) return "admin";
     if (location.pathname.includes("/tutorials")) return "tutorials";
@@ -83,9 +63,7 @@ const NavBar = () => {
     return "home";
   };
 
-  const toggleDrawer = () => {
-    setIsDrawerVisible(!isDrawerVisible);
-  };
+  const toggleDrawer = () => setIsDrawerVisible((prev) => !prev);
 
   const menuItems = [
     ...(isLoggedIn && user?.role === "teacher"
@@ -104,30 +82,23 @@ const NavBar = () => {
       style={{
         position: "fixed",
         top: 0,
-        left: 0,
         width: "100%",
         zIndex: 1000,
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
-        boxShadow: "0 2px 8px rgba(0, 0, 0, 0.15)",
         backgroundColor: "#001529",
         padding: isMobile ? "0 16px" : "0 24px",
         minHeight: "64px",
+        boxShadow: "0 2px 8px rgba(0, 0, 0, 0.15)",
       }}
     >
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          color: "white",
-          fontSize: isMobile ? "16px" : "20px",
-          fontWeight: "bold",
-        }}
-      >
+      {/* Logo */}
+      <div style={{ color: "white", fontSize: isMobile ? "16px" : "20px", fontWeight: "bold" }}>
         Science Lab
       </div>
 
+      {/* Desktop Menu */}
       <Menu
         theme="dark"
         mode="horizontal"
@@ -137,51 +108,34 @@ const NavBar = () => {
           flex: 1,
           justifyContent: "center",
           backgroundColor: "transparent",
-          minWidth: 0,
           display: isMobile ? "none" : "flex",
         }}
       />
 
-      <div
-        style={{
-          display: isMobile ? "none" : "flex",
-          alignItems: "center",
-          gap: "8px",
-        }}
-      >
+      {/* Desktop Buttons */}
+      <div style={{ display: isMobile ? "none" : "flex", alignItems: "center", gap: "8px" }}>
         {isLoggedIn ? (
           <>
-            <Avatar
-              icon={<UserOutlined />}
-              style={{ cursor: "pointer" }}
-              onClick={() => navigate("/profile")}
-            />
+            <Avatar icon={<UserOutlined />} onClick={() => navigate("/profile")} style={{ cursor: "pointer" }} />
             <Button onClick={handleLogout}>Logout</Button>
           </>
         ) : (
           <>
-            <Button type="primary" onClick={showLoginPopup}>
-              Login
-            </Button>
-            <Button type="default" onClick={showSignupPopup}>
-              Sign Up
-            </Button>
+            <Button type="primary" onClick={() => setIsLoginVisible(true)}>Login</Button>
+            <Button onClick={() => setIsSignupVisible(true)}>Sign Up</Button>
           </>
         )}
       </div>
 
+      {/* Mobile Menu Button */}
       <Button
         type="text"
         icon={<MenuOutlined />}
         onClick={toggleDrawer}
-        style={{
-          color: "white",
-          display: isMobile ? "flex" : "none",
-          marginLeft: "50px",
-          alignSelf: "center",
-        }}
+        style={{ color: "white", display: isMobile ? "flex" : "none" }}
       />
 
+      {/* Drawer Menu for Mobile */}
       <Drawer
         title="Menu"
         placement="right"
@@ -193,56 +147,28 @@ const NavBar = () => {
           header: { backgroundColor: "#001529", color: "white" },
         }}
       >
-        <Menu
-          mode="vertical"
-          selectedKeys={[getSelectedKey()]}
-          items={menuItems}
-          style={{ borderRight: 0 }}
-        />
+        <Menu mode="vertical" selectedKeys={[getSelectedKey()]} items={menuItems} />
         <div style={{ padding: "16px" }}>
           {isLoggedIn ? (
             <>
               <Button
                 type="text"
                 icon={<UserOutlined />}
-                onClick={() => {
-                  navigate("/profile");
-                  toggleDrawer();
-                }}
+                onClick={() => { navigate("/profile"); toggleDrawer(); }}
                 style={{ width: "100%", textAlign: "left", marginBottom: "8px" }}
               >
                 Profile
               </Button>
-              <Button
-                onClick={() => {
-                  handleLogout();
-                  toggleDrawer();
-                }}
-                style={{ width: "100%" }}
-              >
+              <Button onClick={() => { handleLogout(); toggleDrawer(); }} style={{ width: "100%" }}>
                 Logout
               </Button>
             </>
           ) : (
             <>
-              <Button
-                type="primary"
-                onClick={() => {
-                  showLoginPopup();
-                  toggleDrawer();
-                }}
-                style={{ width: "100%", marginBottom: "8px" }}
-              >
+              <Button type="primary" onClick={() => { setIsLoginVisible(true); toggleDrawer(); }} style={{ width: "100%", marginBottom: "8px" }}>
                 Login
               </Button>
-              <Button
-                type="default"
-                onClick={() => {
-                  showSignupPopup();
-                  toggleDrawer();
-                }}
-                style={{ width: "100%" }}
-              >
+              <Button onClick={() => { setIsSignupVisible(true); toggleDrawer(); }} style={{ width: "100%" }}>
                 Sign Up
               </Button>
             </>
@@ -250,13 +176,14 @@ const NavBar = () => {
         </div>
       </Drawer>
 
+      {/* Popups */}
       <LoginPopup
         isVisible={isLoginVisible}
-        onClose={hideLoginPopup}
-        onSignupClick={showSignupPopup}
-        onLoginSuccess={handleLoginSuccess} // Pass the callback
+        onClose={() => setIsLoginVisible(false)}
+        onSignupClick={() => setIsSignupVisible(true)}
+        onLoginSuccess={handleLoginSuccess}
       />
-      <SignupPopup isVisible={isSignupVisible} onClose={hideSignupPopup} />
+      <SignupPopup isVisible={isSignupVisible} onClose={() => setIsSignupVisible(false)} />
     </Header>
   );
 };
