@@ -1,25 +1,57 @@
 import React from "react";
 import { Layout, Typography } from "antd";
 
-const { Footer: AntdFooter } = Layout;
+const { Header, Content, Footer: AntdFooter } = Layout;
 const { Text } = Typography;
 
-const Footer = () => {
-  const footerStyle = {
-    backgroundColor: "#001529",
-    color: "#fff",
-    textAlign: "center",
-    padding: "20px 0",
-    marginTop: "auto", // 👈 key to push footer to bottom when space is available
-  };
-
+const AppLayout = ({ children }) => {
   return (
-    <AntdFooter style={footerStyle}>
-      <Text style={{ color: "#fff" }}>
-        &copy; {new Date().getFullYear()} Science Lab Tuition | All Rights Reserved
-      </Text>
-    </AntdFooter>
+    <Layout
+      style={{
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      {/* Header */}
+      <Header
+        style={{
+          backgroundColor: "#001529",
+          color: "#fff",
+          textAlign: "center",
+          fontSize: "18px",
+        }}
+      >
+        Science Lab Tuition
+      </Header>
+
+      {/* Content */}
+      <Content
+        style={{
+          flex: "1 0 auto", // ensures content takes remaining space
+          padding: "24px",
+          background: "#f0f2f5",
+        }}
+      >
+        {children}
+      </Content>
+
+      {/* Footer */}
+      <AntdFooter
+        style={{
+          backgroundColor: "#001529",
+          color: "#fff",
+          textAlign: "center",
+          padding: "16px",
+          marginTop: "auto",
+        }}
+      >
+        <Text style={{ color: "#fff" }}>
+          &copy; {new Date().getFullYear()} Science Lab Tuition | All Rights Reserved
+        </Text>
+      </AntdFooter>
+    </Layout>
   );
 };
 
-export default Footer;
+export default AppLayout;
