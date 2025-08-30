@@ -1,12 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import NavBar from "../components/NavBar";
 import { Card } from "antd";
-import backgroundImage from "../assets/back.jpg"; 
+import backgroundImage from "../assets/back.jpg";
 import Footer from "../components/Footer";
 
 const Lessons = () => {
   const navigate = useNavigate();
+  const [hovered, setHovered] = useState(null);
 
   const grades = [
     { grade: 6, path: "/lessons/grade6" },
@@ -35,62 +36,85 @@ const Lessons = () => {
     left: 0,
     right: 0,
     bottom: 0,
-    background: "rgba(0, 0, 0, 0.5)", // lighter for better blur
+    background: "rgba(0, 0, 0, 0.55)",
+    backdropFilter: "blur(6px)",
     zIndex: 1,
-    backdropFilter: "blur(4px)", // stronger blur
   };
 
   const contentStyle = {
     position: "relative",
     zIndex: 2,
-    paddingTop: "100px", // Navbar space
-    padding: "60px",
-    textShadow: "2px 2px 4px rgba(0, 0, 0, 1)", // fixed typo
+    padding: "80px 40px 60px",
+  };
+
+  const headingStyle = {
+    fontSize: "2.5rem",
+    fontWeight: "bold",
+    textShadow: "2px 2px 6px rgba(0, 0, 0, 0.9)",
+    marginBottom: "10px",
+  };
+
+  const subTextStyle = {
+    fontSize: "1.2rem",
+    opacity: 0.9,
   };
 
   const cardContainerStyle = {
-    paddingTop: "50px",
+    marginTop: "50px",
     display: "flex",
     justifyContent: "center",
     gap: "30px",
     flexWrap: "wrap",
-    marginTop: "20px",
     zIndex: 2,
   };
 
-  const cardStyle = {
-    width: 250,
-    minHeight: 180,
+  const baseCardStyle = {
+    width: 260,
+    minHeight: 190,
     cursor: "pointer",
-    backgroundColor: "#fff",
-    color: "#000",
-    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-    transition: "transform 0.3s, box-shadow 0.3s",
-    opacity: 0.95,
+    background: "rgba(255, 255, 255, 0.15)",
+    backdropFilter: "blur(8px)",
+    borderRadius: "15px",
+    color: "#fff",
+    boxShadow: "0 8px 20px rgba(0, 0, 0, 0.3)",
+    transition: "all 0.3s ease-in-out",
+    border: "1px solid rgba(255, 255, 255, 0.2)",
+    textAlign: "center",
+  };
+
+  const hoverCardStyle = {
+    transform: "scale(1.05)",
+    boxShadow: "0 12px 30px rgba(0, 0, 0, 0.5)",
   };
 
   return (
     <div>
-      <NavBar /> {/* ✅ Added NavBar */}
+      <NavBar />
       <div style={pageStyle}>
         <div style={overlayStyle}></div>
 
         <div style={contentStyle}>
-          <h1>Science Lessons</h1>
-          <p>Select your grade to access the lessons.</p>
+          <h1 style={headingStyle}>Science Lessons</h1>
+          <p style={subTextStyle}>Select your grade to access the lessons.</p>
 
           <div style={cardContainerStyle}>
             {grades.map(({ grade, path }) => (
               <Card
                 key={grade}
                 title={`Grade ${grade}`}
-                bordered={true}
-                style={cardStyle}
+                bordered={false}
+                style={{
+                  ...baseCardStyle,
+                  ...(hovered === grade ? hoverCardStyle : {}),
+                }}
                 onClick={() => navigate(path)}
                 hoverable
-                bodyStyle={{ fontSize: "14px", textAlign: "center" }}
+                onMouseEnter={() => setHovered(grade)}
+                onMouseLeave={() => setHovered(null)}
+                bodyStyle={{ fontSize: "15px", color: "#fff" }}
+                aria-label={`View lessons for Grade ${grade}`}
               >
-                Click to view Grade {grade} lessons
+                Explore interactive lessons for Grade {grade}
               </Card>
             ))}
           </div>
