@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import NavBar from "../components/NavBar";
 import { Card } from "antd";
-import backgroundImage from "../assets/back.jpg"; // Adjust path if necessary
+import backgroundImage from "../assets/back.jpg"; 
 import Footer from "../components/Footer";
 
 const Lessons = () => {
@@ -35,24 +35,21 @@ const Lessons = () => {
     left: 0,
     right: 0,
     bottom: 0,
-    background: "rgba(0, 0, 0, 0.6)", // Dark overlay for readability
+    background: "rgba(0, 0, 0, 0.5)", // lighter for better blur
     zIndex: 1,
-    backgroundblur: "5px",
-    backdropFilter: "blur(1px)", // Blur effect for the overlay
+    backdropFilter: "blur(4px)", // stronger blur
   };
 
   const contentStyle = {
     position: "relative",
     zIndex: 2,
-    paddingTop: "100px", // Additional padding for navbar
-    paddingLeft: "60px",
-    paddingRight: "60px",
-    paddingBottom: "60px",
-    textshadow: "2px 2px 4px rgba(0, 0, 0, 1)",
+    paddingTop: "100px", // Navbar space
+    padding: "60px",
+    textShadow: "2px 2px 4px rgba(0, 0, 0, 1)", // fixed typo
   };
 
   const cardContainerStyle = {
-    paddingTop: "50px", // Added padding between navbar and cards
+    paddingTop: "50px",
     display: "flex",
     justifyContent: "center",
     gap: "30px",
@@ -68,40 +65,39 @@ const Lessons = () => {
     backgroundColor: "#fff",
     color: "#000",
     boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-    transition: "transform 0.2s",
-    opacity: 0.9,
+    transition: "transform 0.3s, box-shadow 0.3s",
+    opacity: 0.95,
   };
 
   return (
     <div>
-        
-    <div style={pageStyle}>
-      <div style={overlayStyle}></div>
-      
-      <div style={contentStyle}>
-        <h1>Science Lessons</h1>
-        <p>Select your grade to access the lessons.</p>
+      <NavBar /> {/* ✅ Added NavBar */}
+      <div style={pageStyle}>
+        <div style={overlayStyle}></div>
 
-        <div style={cardContainerStyle}>
-          {grades.map(({ grade, path }) => (
-            <Card
-              key={grade}
-              title={`Grade ${grade}`}
-              bordered={true}
-              style={cardStyle}
-              onClick={() => navigate(path)}
-              hoverable
-            >
-              Click to view Grade {grade} lessons
-            </Card>
-          ))}
+        <div style={contentStyle}>
+          <h1>Science Lessons</h1>
+          <p>Select your grade to access the lessons.</p>
+
+          <div style={cardContainerStyle}>
+            {grades.map(({ grade, path }) => (
+              <Card
+                key={grade}
+                title={`Grade ${grade}`}
+                bordered={true}
+                style={cardStyle}
+                onClick={() => navigate(path)}
+                hoverable
+                bodyStyle={{ fontSize: "14px", textAlign: "center" }}
+              >
+                Click to view Grade {grade} lessons
+              </Card>
+            ))}
+          </div>
         </div>
       </div>
-      
+      <Footer />
     </div>
-        <Footer />
-    </div>
-    
   );
 };
 
