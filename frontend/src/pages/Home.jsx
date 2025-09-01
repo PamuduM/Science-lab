@@ -13,7 +13,13 @@ import backgroundImage from "../assets/back.jpg";
 
 const { useBreakpoint } = Grid;
 
-// 🎨 Common Styles
+// 🎨 Shared styles
+const COLORS = {
+  primary: "#001529",
+  accent: "#40a9ff",
+  lightText: "#ccc",
+};
+
 const sectionTitle = {
   textAlign: "center",
   fontSize: "36px",
@@ -100,19 +106,21 @@ const HeroSection = () => {
 const ServicesSection = () => {
   const services = [
     {
-      icon: <BookOutlined style={{ fontSize: "48px", color: "#001529" }} />,
+      icon: <BookOutlined style={{ fontSize: "48px", color: COLORS.primary }} />,
       title: "Science Lessons",
       description:
         "Comprehensive science lessons for grades 6-11 covering all major topics with easy-to-understand explanations.",
     },
     {
-      icon: <ExperimentOutlined style={{ fontSize: "48px", color: "#001529" }} />,
+      icon: (
+        <ExperimentOutlined style={{ fontSize: "48px", color: COLORS.primary }} />
+      ),
       title: "Practical Sessions",
       description:
         "Hands-on laboratory experiments and practical sessions to reinforce theoretical knowledge.",
     },
     {
-      icon: <ReadOutlined style={{ fontSize: "48px", color: "#001529" }} />,
+      icon: <ReadOutlined style={{ fontSize: "48px", color: COLORS.primary }} />,
       title: "Study Materials",
       description:
         "Access to premium study materials, notes, and resources designed for academic excellence.",
@@ -120,8 +128,8 @@ const ServicesSection = () => {
   ];
 
   return (
-    <div style={{ backgroundColor: "#f0f0f0", padding: "60px 20px" }}>
-      <h2 style={{ ...sectionTitle, color: "#001529" }}>Our Services</h2>
+    <section style={{ backgroundColor: "#f0f0f0", padding: "60px 20px" }}>
+      <h2 style={{ ...sectionTitle, color: COLORS.primary }}>Our Services</h2>
       <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
         <Row gutter={[32, 32]}>
           {services.map((service, index) => (
@@ -136,12 +144,6 @@ const ServicesSection = () => {
                   boxShadow: "0 4px 15px rgba(0, 0, 0, 0.1)",
                   transition: "all 0.3s ease",
                 }}
-                onMouseEnter={(e) =>
-                  (e.currentTarget.style.transform = "scale(1.05)")
-                }
-                onMouseLeave={(e) =>
-                  (e.currentTarget.style.transform = "scale(1)")
-                }
                 bodyStyle={{ padding: "40px 20px" }}
               >
                 {service.icon}
@@ -156,7 +158,7 @@ const ServicesSection = () => {
           ))}
         </Row>
       </div>
-    </div>
+    </section>
   );
 };
 
@@ -172,8 +174,8 @@ const FeaturesSection = () => {
   ];
 
   return (
-    <div style={{ backgroundColor: "white", padding: "60px 20px" }}>
-      <h2 style={{ ...sectionTitle, color: "#001529" }}>
+    <section style={{ backgroundColor: "white", padding: "60px 20px" }}>
+      <h2 style={{ ...sectionTitle, color: COLORS.primary }}>
         Why Choose Science Lab?
       </h2>
       <div style={{ maxWidth: "800px", margin: "0 auto", textAlign: "left" }}>
@@ -188,14 +190,12 @@ const FeaturesSection = () => {
               color: "#333",
             }}
           >
-            <CheckCircleOutlined
-              style={{ color: "#52c41a", marginRight: 15 }}
-            />
+            <CheckCircleOutlined style={{ color: "#52c41a", marginRight: 15 }} />
             <span>{feature}</span>
           </div>
         ))}
       </div>
-    </div>
+    </section>
   );
 };
 
@@ -208,39 +208,37 @@ const StatsSection = () => {
   ];
 
   return (
-    <div
+    <section
       style={{
-        backgroundColor: "#001529",
+        backgroundColor: COLORS.primary,
         padding: "60px 20px",
         color: "white",
         textAlign: "center",
       }}
     >
       <h2 style={{ ...sectionTitle, color: "white" }}>Our Achievements</h2>
-      <div style={{ maxWidth: "800px", margin: "0 auto" }}>
-        <Row gutter={[32, 32]}>
-          {stats.map((stat, index) => (
-            <Col xs={24} sm={8} key={index}>
-              <div style={{ marginBottom: "30px" }}>
-                <span
-                  style={{
-                    fontSize: "48px",
-                    fontWeight: "bold",
-                    color: "#40a9ff",
-                    display: "block",
-                  }}
-                >
-                  {stat.number}
-                </span>
-                <span style={{ fontSize: "16px", color: "#ccc" }}>
-                  {stat.label}
-                </span>
-              </div>
-            </Col>
-          ))}
-        </Row>
-      </div>
-    </div>
+      <Row gutter={[32, 32]} justify="center">
+        {stats.map((stat, index) => (
+          <Col xs={24} sm={8} key={index}>
+            <div>
+              <span
+                style={{
+                  fontSize: "48px",
+                  fontWeight: "bold",
+                  color: COLORS.accent,
+                  display: "block",
+                }}
+              >
+                {stat.number}
+              </span>
+              <span style={{ fontSize: "16px", color: COLORS.lightText }}>
+                {stat.label}
+              </span>
+            </div>
+          </Col>
+        ))}
+      </Row>
+    </section>
   );
 };
 
