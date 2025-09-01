@@ -13,11 +13,20 @@ import backgroundImage from "../assets/back.jpg";
 
 const { useBreakpoint } = Grid;
 
-// ✅ Hero Section
-const HeroSection = ({ navigate }) => {
-  const screens = useBreakpoint();
+// 🎨 Common Styles
+const sectionTitle = {
+  textAlign: "center",
+  fontSize: "36px",
+  marginBottom: "50px",
+  fontWeight: "bold",
+};
 
-  const heroStyles = {
+// ✅ Hero Section
+const HeroSection = () => {
+  const screens = useBreakpoint();
+  const navigate = useNavigate();
+
+  const styles = {
     section: {
       textAlign: "center",
       padding: "100px 20px 80px",
@@ -36,9 +45,8 @@ const HeroSection = ({ navigate }) => {
     },
     description: {
       fontSize: screens.md ? "18px" : "16px",
-      marginBottom: "40px",
-      maxWidth: "600px",
       margin: "0 auto 40px",
+      maxWidth: "600px",
       textShadow: "2px 2px 4px rgba(0, 0, 0, 0.8)",
     },
     buttons: {
@@ -58,19 +66,19 @@ const HeroSection = ({ navigate }) => {
   };
 
   return (
-    <div style={heroStyles.section}>
-      <h1 style={heroStyles.title}>Welcome to Science Lab</h1>
-      <h2 style={heroStyles.subtitle}>Excellence in Science Education</h2>
-      <p style={heroStyles.description}>
+    <div style={styles.section}>
+      <h1 style={styles.title}>Welcome to Science Lab</h1>
+      <h2 style={styles.subtitle}>Excellence in Science Education</h2>
+      <p style={styles.description}>
         Join thousands of students who have achieved academic success with our
         expert-led science tuition for grades 6-11. Master complex concepts
         through our innovative teaching methods.
       </p>
-      <div style={heroStyles.buttons}>
+      <div style={styles.buttons}>
         <Button
           type="primary"
           size="large"
-          style={heroStyles.button}
+          style={styles.button}
           onClick={() => navigate("/lessons")}
         >
           Start Learning
@@ -78,7 +86,7 @@ const HeroSection = ({ navigate }) => {
         <Button
           type="default"
           size="large"
-          style={heroStyles.button}
+          style={styles.button}
           onClick={() => navigate("/about")}
         >
           Learn More
@@ -113,21 +121,11 @@ const ServicesSection = () => {
 
   return (
     <div style={{ backgroundColor: "#f0f0f0", padding: "60px 20px" }}>
-      <h2
-        style={{
-          textAlign: "center",
-          fontSize: "36px",
-          marginBottom: "50px",
-          color: "#001529",
-          fontWeight: "bold",
-        }}
-      >
-        Our Services
-      </h2>
+      <h2 style={{ ...sectionTitle, color: "#001529" }}>Our Services</h2>
       <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
         <Row gutter={[32, 32]}>
           {services.map((service, index) => (
-            <Col xs={24} md={8} key={index}>
+            <Col xs={24} sm={12} lg={8} key={index}>
               <Card
                 hoverable
                 style={{
@@ -136,8 +134,14 @@ const ServicesSection = () => {
                   borderRadius: "15px",
                   overflow: "hidden",
                   boxShadow: "0 4px 15px rgba(0, 0, 0, 0.1)",
-                  transition: "transform 0.3s ease, box-shadow 0.3s ease",
+                  transition: "all 0.3s ease",
                 }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.transform = "scale(1.05)")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.transform = "scale(1)")
+                }
                 bodyStyle={{ padding: "40px 20px" }}
               >
                 {service.icon}
@@ -169,15 +173,7 @@ const FeaturesSection = () => {
 
   return (
     <div style={{ backgroundColor: "white", padding: "60px 20px" }}>
-      <h2
-        style={{
-          textAlign: "center",
-          fontSize: "36px",
-          marginBottom: "50px",
-          color: "#001529",
-          fontWeight: "bold",
-        }}
-      >
+      <h2 style={{ ...sectionTitle, color: "#001529" }}>
         Why Choose Science Lab?
       </h2>
       <div style={{ maxWidth: "800px", margin: "0 auto", textAlign: "left" }}>
@@ -192,7 +188,9 @@ const FeaturesSection = () => {
               color: "#333",
             }}
           >
-            <CheckCircleOutlined style={{ color: "#52c41a", marginRight: 15 }} />
+            <CheckCircleOutlined
+              style={{ color: "#52c41a", marginRight: 15 }}
+            />
             <span>{feature}</span>
           </div>
         ))}
@@ -210,23 +208,28 @@ const StatsSection = () => {
   ];
 
   return (
-    <div style={{ backgroundColor: "#001529", padding: "60px 20px", color: "white", textAlign: "center" }}>
-      <h2
-        style={{
-          fontSize: "36px",
-          marginBottom: "50px",
-          color: "white",
-          fontWeight: "bold",
-        }}
-      >
-        Our Achievements
-      </h2>
+    <div
+      style={{
+        backgroundColor: "#001529",
+        padding: "60px 20px",
+        color: "white",
+        textAlign: "center",
+      }}
+    >
+      <h2 style={{ ...sectionTitle, color: "white" }}>Our Achievements</h2>
       <div style={{ maxWidth: "800px", margin: "0 auto" }}>
         <Row gutter={[32, 32]}>
           {stats.map((stat, index) => (
             <Col xs={24} sm={8} key={index}>
               <div style={{ marginBottom: "30px" }}>
-                <span style={{ fontSize: "48px", fontWeight: "bold", color: "#40a9ff", display: "block" }}>
+                <span
+                  style={{
+                    fontSize: "48px",
+                    fontWeight: "bold",
+                    color: "#40a9ff",
+                    display: "block",
+                  }}
+                >
                   {stat.number}
                 </span>
                 <span style={{ fontSize: "16px", color: "#ccc" }}>
@@ -243,8 +246,6 @@ const StatsSection = () => {
 
 // ✅ Main Home Component
 const Home = () => {
-  const navigate = useNavigate();
-
   return (
     <div>
       <NavBar />
@@ -268,7 +269,7 @@ const Home = () => {
           }}
         />
         <div style={{ position: "relative", zIndex: 2, paddingTop: "80px" }}>
-          <HeroSection navigate={navigate} />
+          <HeroSection />
         </div>
       </div>
       <ServicesSection />
